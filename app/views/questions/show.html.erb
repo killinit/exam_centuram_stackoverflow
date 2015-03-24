@@ -1,0 +1,77 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @question.content %>
+</p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @question.score %>
+</p>
+<p>
+  <%= link_to "<button>+</button>".html_safe, question_score_plus_path(@question.id) %>
+  <%= link_to "<button>-</button>".html_safe, question_score_minus_path(@question.id) %>
+</p>
+<p>
+  <strong>User:</strong>
+  <%= @question.user_id %>
+</p>
+<p><strong>Answers:</strong></p>
+<%- @question.answers.each do |a| %>
+
+  <%- if current_user.id == @question.user_id %>
+    <p><%= a.content %>
+      <%= link_to "<button>+</button>".html_safe, answer_score_plus_path(a.id) %>
+      <%= link_to "<button>-</button>".html_safe, answer_score_minus_path(a.id) %>
+      <%= a.best_answer %>
+      <% if a.best_answer %>
+        <b>IS THE BEST</b>
+      <% elsif a.best_answer.nil? %>
+        <%= link_to "<button>BEST</button>".html_safe, answer_mark_best_path(a.id) %>
+      <% end -%>
+      <strong>score: <%= a.score %></strong>
+    </p>
+  <% else %>
+    <p><%= a.content %>
+      <%= link_to "<button>+</button>".html_safe, answer_score_plus_path(a.id) %>
+      <%= link_to "<button>-</button>".html_safe, answer_score_minus_path(a.id) %>
+      <% if a.best_answer %>
+        <b>IS THE BEST</b>
+      <% end -%>
+      <strong>score: <%= a.score %></strong>
+    </p>
+  <% end -%>
+  <p style="padding-left: 15px"><strong>Comments</strong></p>
+  <% a.comments.each do |c| %>
+    <p style="padding-left: 15px"><%= c.content %></p>
+  <% end -%>
+  <%= form_for Comment.new do |comment| %>
+    <%= comment.text_field :content %>
+    <%= comment.hidden_field :user_id, value: current_user.id %>
+    <%= comment.hidden_field :question_id, value: @question.id %>
+    <%= comment.hidden_field :answer_id, value: a.id %>
+    <%= comment.submit %>
+  <% end -%>
+<% end -%>
+<%= form_for Answer.new do |answer| %>
+  <%= answer.text_field :content %>
+  <%= answer.hidden_field :user_id, value: current_user.id %>
+  <%= answer.hidden_field :question_id, value: @question.id %>
+  <%= answer.submit %>
+<% end -%>
+
+<p><strong>Comments:</strong></p>
+<%- @question.comments.each do |a| %>
+  <p><%= a.content %></p>
+<% end -%>
+<%= form_for Comment.new do |comment| %>
+  <%= comment.text_field :content %>
+  <%= comment.hidden_field :user_id, value: current_user.id %>
+  <%= comment.hidden_field :question_id, value: @question.id %>
+  <%= comment.submit %>
+<% end -%>
+
+
+<%= link_to 'Edit', edit_question_path(@question) %> |
+<%= link_to 'Back', questions_path %>

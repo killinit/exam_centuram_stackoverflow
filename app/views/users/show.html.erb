@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Username:</strong>
+  <%= @user.username %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Firstname:</strong>
+  <%= @user.firstname %>
+</p>
+
+<p>
+  <strong>Lastname:</strong>
+  <%= @user.lastname %>
+</p>
+<h3>question: </h3>
+<%- @questions.each do |question| %>
+  <p><%= link_to question.content, question_path(question) %></p>
+<% end -%>
+<h3>answers: </h3>
+<%- @answers.each do |answer| %>
+  <p><%= link_to answer.content, answer_path(answer) %></p>
+<% end -%>
+
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
